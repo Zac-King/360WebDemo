@@ -98,6 +98,9 @@ public class WebVideoTexture : MonoBehaviour
             yield return null;
         }
 
+        m_CurrentMovieTexture.Pause();
+        m_CurrentMovieTexture.Seek(0f);
+
         m_CurrentMovieTexture = m_NextMovieTexture;
         Screen.GetComponent<MeshRenderer>().material.mainTexture = m_CurrentMovieTexture;
 
