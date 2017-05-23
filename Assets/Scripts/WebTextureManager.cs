@@ -11,7 +11,9 @@ public class WebTextureManager : MonoBehaviour
 
     private List<WebGLMovieTexture> m_MovieTextures = new List<WebGLMovieTexture>();
     public List<VideoInformation> m_VideoMeta = new List<VideoInformation>();
-    
+
+    private List<GameObject> Screens = new List<GameObject>();
+
     private void Start()
     {
         m_Renderer = m_Screen.GetComponent<MeshRenderer>();
@@ -22,10 +24,11 @@ public class WebTextureManager : MonoBehaviour
         {
             webText = new WebGLMovieTexture(@"StreamingAssets/" + vInfo.m_FileName);
             webText.loop = vInfo.m_Loop;
-            m_MovieTextures.Add(webText);
+            m_MovieTextures.Add(webText);            
         }
 
         StopCurrentAndPlayVideoAtIndex(0);
+
     }
 
     private void Update()
