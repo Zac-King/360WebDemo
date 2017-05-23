@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MultiScreenVideoManager : MonoBehaviour
 {
-    private int m_currentVideoIndex = 0;
+    private int m_currentVideoIndex = -1;
 
     /// <summary>
     /// Mesh for the screen the WebMovieTextures will be rendered on
@@ -55,6 +55,8 @@ public class MultiScreenVideoManager : MonoBehaviour
             vScreen.SetActive(false);
             webTex.Pause();
         }
+
+        StopCurrentAndPlayVideoAtIndex(0);
 	}
 	
 	void Update ()
@@ -65,21 +67,27 @@ public class MultiScreenVideoManager : MonoBehaviour
 
     public void StopCurrentAndPlayVideoAtIndex(int index)
     {
-        if (index >= m_videoMeta.Count) return;
+        if (index >= m_videoMeta.Count || index == m_currentVideoIndex) return;
 
-        if (m_videoMeta[m_currentVideoIndex] != null)
-            foreach (GameObject go in m_videoMeta[m_currentVideoIndex].m_VideoObjects)
-                go.SetActive(false);
-
-        foreach (GameObject go in m_videoMeta[index].m_VideoObjects)
-            go.SetActive(true);
 
         m_videoScreens[index].SetActive(true);
         m_screenTexturePairs[m_videoScreens[index]].Play();
 
-        m_screenTexturePairs[m_videoScreens[m_currentVideoIndex]].Pause();
-        m_screenTexturePairs[m_videoScreens[m_currentVideoIndex]].Seek(0f);
-        m_videoScreens[m_currentVideoIndex].SetActive(false);
+        foreach (GameObject go in m_videoMeta[index].m_VideoObjects)
+            go.SetActive(true);
+
+
+        if (m_currentVideoIndex >= 0 && m_currentVideoIndex < m_videoMeta.Count)
+        {
+            if (m_videoMeta[m_currentVideoIndex] != null)
+                foreach (GameObject go in m_videoMeta[m_currentVideoIndex].m_VideoObjects)
+                    go.SetActive(false);
+
+            m_screenTexturePairs[m_videoScreens[m_currentVideoIndex]].Pause();
+            m_screenTexturePairs[m_videoScreens[m_currentVideoIndex]].Seek(0f);
+            m_videoScreens[m_currentVideoIndex].SetActive(false);
+        }
+
 
         m_currentVideoIndex = index;
     }
