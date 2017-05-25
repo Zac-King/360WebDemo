@@ -6,6 +6,11 @@ public class MultiScreenVideoManager : MonoBehaviour
 {
     private int m_currentVideoIndex = -1;
 
+    public float m_minWarp;
+
+    public float m_warpSpeed;
+
+
     /// <summary>
     /// Mesh for the screen the WebMovieTextures will be rendered on
     /// </summary>
@@ -90,6 +95,25 @@ public class MultiScreenVideoManager : MonoBehaviour
 
 
         m_currentVideoIndex = index;
+    }
+
+    public void WarpToVideoAtIndex(int index)
+    {
+        StartCoroutine(_WarpToVideoAtIndex(index));
+    }
+
+    public IEnumerator _WarpToVideoAtIndex(int index)
+    {
+        float originalZoom = Camera.main.fieldOfView;
+
+        while(Camera.main.fieldOfView > m_minWarp)
+        {
+            Camera.main.fieldOfView -= (m_warpSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        StopCurrentAndPlayVideoAtIndex(index);
+        Camera.main.fieldOfView = originalZoom;
     }
 
     [System.Serializable]
